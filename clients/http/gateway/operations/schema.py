@@ -1,12 +1,12 @@
 from datetime import datetime
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, ConfigDict
+
+from tools.fakers import fake
 
 
 class OperationType(StrEnum):
-    """Допустимые типы операций."""
-
     FEE = "FEE"
     TOP_UP = "TOP_UP"
     PURCHASE = "PURCHASE"
@@ -17,13 +17,9 @@ class OperationType(StrEnum):
 
 
 class OperationStatus(StrEnum):
-    """Допустимые статусы операций."""
-
     FAILED = "FAILED"
     COMPLETED = "COMPLETED"
     IN_PROGRESS = "IN_PROGRESS"
-    UNSPECIFIED = "UNSPECIFIED"
-
 
 
 class OperationSchema(BaseModel):
@@ -34,10 +30,10 @@ class OperationSchema(BaseModel):
     type: OperationType
     status: OperationStatus
     amount: float
-    card_id: str = Field(alias='cardId')
+    card_id: str = Field(alias="cardId")
     category: str
-    created_at: datetime = Field(alias='createdAt')
-    account_id: str = Field(alias='accountId')
+    created_at: datetime = Field(alias="createdAt")
+    account_id: str = Field(alias="accountId")
 
 
 class OperationReceiptSchema(BaseModel):
@@ -52,9 +48,9 @@ class OperationsSummarySchema(BaseModel):
     """
     Описание структуры статистики по операциям.
     """
-    spent_amount: float = Field(alias='spentAmount')
-    received_amount: float = Field(alias='receivedAmount')
-    cashback_amount: float = Field(alias='cashbackAmount')
+    spent_amount: float = Field(alias="spentAmount")
+    received_amount: float = Field(alias="receivedAmount")
+    cashback_amount: float = Field(alias="cashbackAmount")
 
 
 class GetOperationResponseSchema(BaseModel):
@@ -69,7 +65,8 @@ class GetOperationsQuerySchema(BaseModel):
     Структура query параметров запроса для получения списка операций по счёту.
     """
     model_config = ConfigDict(populate_by_name=True)
-    account_id: str = Field(alias='accountId')
+
+    account_id: str = Field(alias="accountId")
 
 
 class GetOperationsResponseSchema(BaseModel):
@@ -84,7 +81,8 @@ class GetOperationsSummaryQuerySchema(BaseModel):
     Структура query параметров запроса для получения статистики по операциям счёта.
     """
     model_config = ConfigDict(populate_by_name=True)
-    account_id: str = Field(alias='accountId')
+
+    account_id: str = Field(alias="accountId")
 
 
 class GetOperationsSummaryResponseSchema(BaseModel):
@@ -106,10 +104,11 @@ class MakeOperationRequestSchema(BaseModel):
     Базовая структура тела запроса для создания финансовой операции.
     """
     model_config = ConfigDict(populate_by_name=True)
-    status: OperationStatus
-    amount: float
-    card_id: str = Field(alias='cardId')
-    account_id: str = Field(alias='accountId')
+
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
+    card_id: str = Field(alias="cardId")
+    account_id: str = Field(alias="accountId")
 
 
 class MakeFeeOperationRequestSchema(MakeOperationRequestSchema):
@@ -175,7 +174,7 @@ class MakePurchaseOperationRequestSchema(MakeOperationRequestSchema):
     Дополнительное поле:
     - category: категория покупки.
     """
-    category: str
+    category: str = Field(default_factory=fake.category)
 
 
 class MakePurchaseOperationResponseSchema(BaseModel):

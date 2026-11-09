@@ -3,7 +3,6 @@ from httpx import Response, QueryParams
 from clients.http.client import HTTPClient
 from clients.http.gateway.client import build_gateway_http_client
 from clients.http.gateway.operations.schema import (
-    OperationStatus,
     OperationSchema,
     OperationReceiptSchema,
     OperationsSummarySchema,
@@ -181,8 +180,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :return: Проверенная модель ответа API.
         """
         request = MakeFeeOperationRequestSchema(
-            status=OperationStatus.COMPLETED,
-            amount=55.77,
             card_id=card_id,
             account_id=account_id
         )
@@ -197,8 +194,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :return: Проверенная модель ответа API.
         """
         request = MakeTopUpOperationRequestSchema(
-            status=OperationStatus.COMPLETED,
-            amount=1500.11,
             card_id=card_id,
             account_id=account_id
         )
@@ -213,8 +208,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :return: Проверенная модель ответа API.
         """
         request = MakeCashbackOperationRequestSchema(
-            status=OperationStatus.COMPLETED,
-            amount=1500.11,
             card_id=card_id,
             account_id=account_id
         )
@@ -229,8 +222,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :return: Проверенная модель ответа API.
         """
         request = MakeTransferOperationRequestSchema(
-            status=OperationStatus.COMPLETED,
-            amount=15.11,
             card_id=card_id,
             account_id=account_id
         )
@@ -245,10 +236,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :return: Проверенная модель ответа API.
         """
         request = MakePurchaseOperationRequestSchema(
-            status=OperationStatus.COMPLETED,
-            amount=55.77,
             card_id=card_id,
-            category="taxi",
             account_id=account_id
         )
         response = self.make_purchase_operation_api(request)
@@ -262,8 +250,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :return: Проверенная модель ответа API.
         """
         request = MakeBillPaymentOperationRequestSchema(
-            status=OperationStatus.COMPLETED,
-            amount=55.77,
             card_id=card_id,
             account_id=account_id
         )
@@ -278,8 +264,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :return: Проверенная модель ответа API.
         """
         request = MakeCashWithdrawalOperationRequestSchema(
-            status=OperationStatus.COMPLETED,
-            amount=55.77,
             card_id=card_id,
             account_id=account_id
         )
