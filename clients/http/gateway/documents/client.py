@@ -1,28 +1,11 @@
-from typing import TypedDict
-
 from httpx import Response
 
 from clients.http.client import HTTPClient
 from clients.http.gateway.client import build_gateway_http_client
-
-
-class DocumentDict(TypedDict):
-    """Описание структуры документа."""
-
-    url: str
-    document: str
-
-
-class GetTariffDocumentResponseDict(TypedDict):
-    """Описание ответа получения тарифа."""
-
-    tariff: DocumentDict
-
-
-class GetContractDocumentResponseDict(TypedDict):
-    """Описание ответа получения контракта."""
-
-    contract: DocumentDict
+from clients.http.gateway.documents.schema import (
+    GetTariffDocumentResponseSchema,
+    GetContractDocumentResponseSchema,
+)
 
 
 class DocumentsGatewayHTTPClient(HTTPClient):
@@ -44,23 +27,23 @@ class DocumentsGatewayHTTPClient(HTTPClient):
         """
         return self.get(f"/api/v1/documents/contract-document/{account_id}")
 
-    def get_tariff_document(self, account_id: str) -> GetTariffDocumentResponseDict:
+    def get_tariff_document(self, account_id: str) -> GetTariffDocumentResponseSchema:
         """Получить тариф и разобрать JSON-ответ.
 
         :param account_id: Идентификатор счёта.
-        :return: Словарь с ключом tariff и данными документа.
+        :return: Модель с полем tariff и данными документа.
         """
         response = self.get_tariff_document_api(account_id)
-        return response.json()
+        return GetTariffDocumentResponseSchema.model_validate_json(response.text)
 
-    def get_contract_document(self, account_id: str) -> GetContractDocumentResponseDict:
+    def get_contract_document(self, account_id: str) -> GetContractDocumentResponseSchema:
         """Получить контракт и разобрать JSON-ответ.
 
         :param account_id: Идентификатор счёта.
-        :return: Словарь с ключом contract и данными документа.
+        :return: Модель с полем contract и данными документа.
         """
         response = self.get_contract_document_api(account_id)
-        return response.json()
+        return GetContractDocumentResponseSchema.model_validate_json(response.text)
 
 
 def build_documents_gateway_http_client() -> DocumentsGatewayHTTPClient:
