@@ -1,6 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <module version="4">
   <component name="NewModuleRootManager">
+    <content url="file://$PROJECT_DIR$">
+      <excludeFolder url="file://$PROJECT_DIR$/.venv" />
+    </content>
     <orderEntry type="jdk" jdkName="~\PycharmProjects\perfomance-tests\.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
