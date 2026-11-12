@@ -20,9 +20,9 @@ class OpenDebitCardAccountScenarioUser(User):
     host = "localhost"
     wait_time = between(1, 3)
 
-    users_gateway_client: UsersGatewayHTTPClient
-    accounts_gateway_client: AccountsGatewayHTTPClient
-    create_user_response: CreateUserResponseSchema
+    users_gateway_client: UsersGatewayHTTPClient # Здесь будет клиент пользователей
+    accounts_gateway_client: AccountsGatewayHTTPClient # Здесь будет клиент счетов
+    create_user_response: CreateUserResponseSchema # Здесь будет модель ответа создания пользователя
 
     def on_start(self) -> None:
         """Подключить клиенты к метрикам текущего запуска и создать пользователя."""
