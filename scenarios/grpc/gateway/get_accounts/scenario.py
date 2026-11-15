@@ -1,9 +1,10 @@
 """Список счетов: создание пользователя, открытие депозита и чтение через GRPC."""
 
-from locust import User, between, task
+from locust import task
 
 from clients.grpc.gateway.locust import GatewayGRPCTaskSet
 from contracts.services.gateway.users.rpc_create_user_pb2 import CreateUserResponse
+from tools.locust.user import LocustBaseUser
 
 
 class GetAccountsTaskSet(GatewayGRPCTaskSet):
@@ -49,10 +50,7 @@ class GetAccountsTaskSet(GatewayGRPCTaskSet):
                 api_client.channel.close()
 
 
-class GetAccountsScenarioUser(User):
+class GetAccountsScenarioUser(LocustBaseUser):
     """Виртуальный пользователь с набором задач получения счетов."""
 
-    # Сохранено по примеру курса; адрес задан в билдере API-клиента.
-    host = "localhost"
     tasks = [GetAccountsTaskSet]
-    wait_time = between(1, 3)
