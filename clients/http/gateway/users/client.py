@@ -11,6 +11,7 @@ from clients.http.gateway.users.schema import (
     CreateUserRequestSchema,
     CreateUserResponseSchema
 )
+from tools.routes import APIRoutes
 
 
 class UsersGatewayHTTPClient(HTTPClient):
@@ -23,8 +24,8 @@ class UsersGatewayHTTPClient(HTTPClient):
         :return: Полный ответ httpx.Response.
         """
         return self.get(
-            f"/api/v1/users/{user_id}",
-            extensions=HTTPClientExtensions(route="/api/v1/users/{user_id}")  # Явно передаём логическое имя маршрута
+            f"{APIRoutes.USERS}/{user_id}",
+            extensions=HTTPClientExtensions(route=f"{APIRoutes.USERS}/{{user_id}}")  # Явно передаём логическое имя маршрута
         )
 
 
@@ -34,7 +35,7 @@ class UsersGatewayHTTPClient(HTTPClient):
         :param request: Модель данных нового пользователя.
         :return: Полный ответ httpx.Response.
         """
-        return self.post("/api/v1/users", json=request.model_dump(by_alias=True))
+        return self.post(APIRoutes.USERS, json=request.model_dump(by_alias=True))
 
     def get_user(self, user_id: str) -> GetUserResponseSchema:
         """Получить и проверить данные пользователя.

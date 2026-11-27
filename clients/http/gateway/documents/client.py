@@ -10,6 +10,7 @@ from clients.http.gateway.documents.schema import (
     GetTariffDocumentResponseSchema,
     GetContractDocumentResponseSchema,
 )
+from tools.routes import APIRoutes
 
 
 class DocumentsGatewayHTTPClient(HTTPClient):
@@ -22,8 +23,8 @@ class DocumentsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.get(
-            f"/api/v1/documents/tariff-document/{account_id}",
-            extensions=HTTPClientExtensions(route="/api/v1/documents/tariff-document/{account_id}")
+            f"{APIRoutes.DOCUMENTS}/tariff-document/{account_id}",
+            extensions=HTTPClientExtensions(route=f"{APIRoutes.DOCUMENTS}/tariff-document/{{account_id}}")
                         )
 
     def get_contract_document_api(self, account_id: str) -> Response:
@@ -33,8 +34,8 @@ class DocumentsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.get(
-            f"/api/v1/documents/contract-document/{account_id}",
-            extensions = HTTPClientExtensions(route="/api/v1/documents/contract-document/{account_id}")
+            f"{APIRoutes.DOCUMENTS}/contract-document/{account_id}",
+            extensions = HTTPClientExtensions(route=f"{APIRoutes.DOCUMENTS}/contract-document/{{account_id}}")
         )
 
     def get_tariff_document(self, account_id: str) -> GetTariffDocumentResponseSchema:
