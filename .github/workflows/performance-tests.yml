@@ -28,21 +28,28 @@ on:
         required: true
         description: 'Locust config file'  # Комментарий, отображаемый в UI при запуске
 
+# Нужно для публикации отчётов в ветку gh-pages.
+permissions:
+  contents: write
+
 jobs:
   run-tests:
     runs-on: ubuntu-latest  # Используется стандартный GitHub Actions runner
     timeout-minutes: 30  # Ограничение по времени выполнения — 30 минут
 
+    env:
+      SCENARIO: ${{ inputs.SCENARIO }}
+
     steps:
       # 1. Клонируем репозиторий, в котором находится YAML-файл
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # 2. Устанавливаем Python (используется в Locust)
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
-          python-version: '3.12'  # Версия Python, соответствующая проекту
+          python-version: '3.14'  # Версия Python, соответствующая проекту
 
       # 3. Клонируем репозиторий с урезанным docker-compose стендом и Dockerfile-ами
       - name: Clone test services
@@ -64,17 +71,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Prepare project settings
+        run: cp .env.example .env
+
       # 7. Создаём папку, куда будет сохранён HTML-отчёт по результатам теста
       - name: Create report directory
         run: mkdir -p ./reports/${{ github.run_id }}
 
       # 8. Запускаем Locust с выбранным конфигурационным файлом и сохраняем HTML-отчёт
       - name: Run load tests and generate HTML report
-        run: locust --config=${{ github.event.inputs.SCENARIO }} --html=./reports/${{ github.run_id }}/index.html
+        run: python -m locust --config="$SCENARIO" --html="./reports/${{ github.run_id }}/index.html"
 
       # 9. Деплой HTML-отчёта в GitHub Pages, чтобы можно было посмотреть результаты в браузере
       - name: Deploy HTML report to GitHub Pages
-        if: always()
+        if: ${{ !cancelled() && hashFiles('reports/**/index.html') != '' }}
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}  # Авторизация для push в gh-pages
